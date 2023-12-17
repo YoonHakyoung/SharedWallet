@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 5 elements to &apos;views&apos;&#x0A;- Original project: &apos;week9&apos;&#x0A;- Destination element: &apos;views&apos;&#x0A;- Original elements:&#x0A;     sign_in_ok.jsp&#x0A;     sign_in.jsp&#x0A;     sign_up_ok.jsp&#x0A;     sign_in_ng.jsp&#x0A;     sign_up.jsp" description="Copy files" element1="src/main/webapp/WEB-INF/views/sign_in_ok.jsp" element2="src/main/webapp/WEB-INF/views/sign_in.jsp" element3="src/main/webapp/WEB-INF/views/sign_up_ok.jsp" element4="src/main/webapp/WEB-INF/views/sign_in_ng.jsp" element5="src/main/webapp/WEB-INF/views/sign_up.jsp" files="5" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1700934865627" target="/Final Exam/src/main/webapp/WEB-INF/views" units="0" version="1.0"/>
+</session>

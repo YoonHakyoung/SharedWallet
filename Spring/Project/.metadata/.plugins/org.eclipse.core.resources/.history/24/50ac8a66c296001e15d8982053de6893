@@ -1,0 +1,227 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>자산 대시보드</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    	@font-face {
+		    font-family: 'SUITE-Regular';
+		    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+		    font-weight: 700;
+		    font-style: normal;
+		}
+    	
+        body {
+            background-color: #f8f9fa;
+            font-family: 'SUITE-Regular';
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+            
+        }
+
+        .monthly-expenditure {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            margin-top: 20px;
+        }
+
+        .col-md-6 {
+            padding: 0 15px;
+        }
+
+        .chart-container {
+            width: 55%;
+            margin-top: 10%; 
+		    margin-left: 10%;
+        }
+
+        canvas {
+            max-width: 100%;
+            border-radius: 10px;
+            top: 10%; 
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+        }
+
+        .card-text {
+            font-size: 14px;
+        }
+
+        ul.list-unstyled {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        ul.list-unstyled li {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .legend-container {
+		    list-style: none;
+		    padding: 0;
+		    position: absolute;
+		    right: 10%; 
+		    top: 10%; 
+		}
+		
+		.legend-container li {
+		    font-size: 14px; /* 원하는 라벨의 폰트 크기로 조절 */
+		    margin-bottom: 5px;
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.legend-container li:before {
+		    content: '■'; /* 각각의 라벨에 정사각형을 표시 */
+		    display: inline-block;
+		    margin-right: 5px; /* 정사각형과 라벨 사이의 간격 */
+		}
+		        
+    </style>
+</head>
+<body>
+
+<%@ include file="/WEB-INF/views/include/nav.jsp"%>
+
+<div class="container mt-5">
+	
+	<!-- 사용자 정보 및 당월 지출 금액 -->
+	<div>
+	    <div class="welcome-message text-primary">
+	        <h3 style="color: #17a2b8;">${loggedMember.m_name}님, 자산 대시보드에 오신 것을 환영합니다!</h3>
+	    </div>
+	    <h3 class="monthly-expenditure bg-info text-white p-3" style="font-size: 18px">${loggedMember.group_id}의 당월 지출 금액 ${monthlyExpenditure}원</h3>
+	</div>
+
+    <!-- 그래프, 리포트 섹션, 최근 지출 내역 섹션을 위아래로 배치 -->
+    <div class="row mt-4">
+        <!-- 그래프 섹션 -->
+		<div class="col-md-6">
+		    <div class="chart-container">
+		        <h6 class="text-center" style="color: #17a2b8;">카테고리</h6>
+		        <canvas id="myDynamicPieChart" width="300" height="300"></canvas>
+		        <ul id="myDynamicPieChartLegend" class="legend-container"></ul>
+		    </div>
+		</div>
+     
+        <!-- 리포트 섹션 -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title text-info">이 달의 리포트</h3>
+                    <p class="card-text mb-3" style="font-size: 14.5px">이번 달엔 '${mostExpensiveCategory}'에 돈을 가장 많이 쓰셨네요!</p>
+                    <p class="card-text font-weight-bold" style="font-size: 14.5px">${monthlyIncrease}</p>
+                </div>
+            </div>
+            <div class="card mb-4">
+            	<div class="card-body">
+                    <h3 class="card-title text-info">최근 지출 내역</h3>
+                    <ul class="list-unstyled">
+                        <c:forEach var="expense" items="${recentExpenses}">
+                            <li>${expense}</li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    var jsArray = ${jsArray}; // JSP 데이터를 JavaScript로 전달
+    var labels = jsArray.map(function(item) {
+        return item.key;
+    });
+    var dataValues = jsArray.map(function(item) {
+        return item.value;
+    });
+    var ctx = document.getElementById('myDynamicPieChart').getContext('2d');
+    var myDynamicPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: dataValues,
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4CAF50',
+                    '#9C27B0',
+                    '#FF9800',
+                    '#607D8B',
+                    '#009688',
+                    '#2196F3',
+                    '#F44336',
+                ],
+            }],
+        },
+        options: {
+            title: {
+                display: true,
+                text: '그래프 타이틀',
+                position: 'left', // 그래프 왼쪽에 위치
+                fontSize: 16,
+                fontColor: '#007bff', // 타이틀 색상 변경
+            },
+            legend: {
+                display: false, // 기존 라벨 숨기기
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        return label + ': ' + value;
+                    }
+                }
+            }
+        }
+    });
+
+    // 캔버스에 라벨 직접 추가
+    var legendContainer = document.getElementById('myDynamicPieChartLegend');
+    labels.forEach(function(label, index) {
+        var listItem = document.createElement('li');
+        listItem.style.color = myDynamicPieChart.data.datasets[0].backgroundColor[index];
+        listItem.textContent = label;
+        legendContainer.appendChild(listItem);
+    });
+</script>
+
+<!-- Bootstrap JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<%@ include file="/WEB-INF/views/include/footer.jsp"%>
+
+</body>
+</html>

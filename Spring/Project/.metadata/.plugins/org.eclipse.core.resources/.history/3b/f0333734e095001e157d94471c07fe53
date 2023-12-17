@@ -1,0 +1,127 @@
+package com.company.myweb.asset;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class AssetService {
+
+    @Autowired
+    private AssetDao assetDao;
+
+    public int addAsset(AssetVo assetVo, String groupId) {
+        return assetDao.insertAsset(assetVo, groupId);
+    }
+
+    public List<AssetVo> listAssets() {
+        return assetDao.selectAssets();
+    }
+
+    public List<AssetVo> getAssetsByGroupId(String groupId) {
+        return assetDao.selectAssetsByGroupId(groupId);
+    }
+    
+    // 월간 지출 금액 계산
+	public int calculateMonthlyExpenditure(List<AssetVo> assetList) {
+		int monthlyExpenditure = 0;
+
+        // 월간 지출 금액을 계산하는 로직을 추가
+        // 예시로 각 자산의 금액을 더하는 방식으로 구현했습니다.
+        for (AssetVo asset : assetList) {
+            // 이번 달의 데이터만 고려
+            if (isCurrentMonth(asset.getA_date())) {
+                monthlyExpenditure += asset.getA_amount();
+            }
+        }
+
+        return monthlyExpenditure;
+	}
+	
+	// 가장 많이 쓴 카테고리 찾기
+	public String findMostExpensiveCategory(List<AssetVo> assetList) {
+		// 가장 많이 쓴 카테고리를 찾는 로직을 추가
+        // 예시로 각 카테고리별 지출 금액을 계산하여 가장 많이 쓴 카테고리를 선택했습니다.
+
+        Map<String, Integer> categoryExpenses = new HashMap<>();
+
+        for (AssetVo asset : assetList) {
+            // 이번 달의 데이터만 고려
+            if (isCurrentMonth(asset.getA_date())) {
+                String category = asset.getA_category();
+                int amount = asset.getA_amount();
+
+                categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0) + amount);
+            }
+        }
+
+        // 가장 많이 쓴 카테고리 찾기
+        String mostExpensiveCategory = categoryExpenses.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("N/A");
+
+        return mostExpensiveCategory;
+	}
+	
+	// 월간 증가액 계산
+    private int calculateMonthlyIncrease(List<AssetVo> assetList) {
+        // 월간 증가액을 계산하는 로직을 추가
+        // 예시로 이전 달과의 차이를 계산하는 방식으로 구현했습니다.
+
+        int lastMonthExpenditure = 0;
+        int currentMonthExpenditure = 0;
+
+        for (AssetVo asset : assetList) {
+            // 이전 달의 데이터와 이번 달의 데이터를 구분하여 계산
+            if (isLastMonth(asset.getA_date())) {
+                lastMonthExpenditure += asset.getA_amount();
+            } else if (isCurrentMonth(asset.getA_date())) {
+                currentMonthExpenditure += asset.getA_amount();
+            }
+        }
+
+        // 월간 증가액 계산
+        int monthlyIncrease = currentMonthExpenditure - lastMonthExpenditure;
+
+        return monthlyIncrease;
+    }
+
+	public List<String> getRecentExpenses(List<AssetVo> assetList) {
+		// 최근 지출 내역을 가져오는 로직을 추가
+        // 예시로 최근 몇 개의 지출 내역을 가져오는 방식으로 구현했습니다.
+
+        List<String> recentExpenses = new ArrayList<>();
+
+        int count = 0;
+        for (AssetVo asset : assetList) {
+            // 최근 몇 개의 지출 내역을 가져오기
+            if (count < 3 && isCurrentMonth(asset.getA_date())) {
+                recentExpenses.add(asset.getA_location() + " " + asset.getA_amount() + "원");
+                count++;
+            }
+        }
+        return recentExpenses;
+	}
+	
+	// 해당 날짜가 현재 달인지 확인하는 메서드
+    private boolean isCurrentMonth(String date) {
+        // 실제 구현은 생략하고 예시로 현재 달을 고려한 메서드를 작성
+        // 실제로는 java.time.LocalDate 또는 SimpleDateFormat 등을 사용하여 구현하는 것이 좋습니다.
+        // 여기에서는 편의상 생략했습니다.
+        return true;
+    }
+
+    // 해당 날짜가 지난 달인지 확인하는 메서드
+    private boolean isLastMonth(String date) {
+        // 실제 구현은 생략하고 예시로 지난 달을 고려한 메서드를 작성
+        // 실제로는 java.time.LocalDate 또는 SimpleDateFormat 등을 사용하여 구현하는 것이 좋습니다.
+        // 여기에서는 편의상 생략했습니다.
+        return true;
+    }
+}
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donut Chart Example</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+    <!-- 그래프를 그릴 공간 -->
+    <div id="donut-chart"></div>
+
+    <script>
+        // 주어진 변수 데이터
+        var data = ${jsArray};
+
+        // 캔버스 크기 설정
+        var width = 500;
+        var height = 500;
+        var radius = Math.min(width, height) / 2;
+
+        // 그래프 생성
+        var svg = d3.select("#donut-chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        // D3.js의 pie 함수를 사용하여 데이터를 각 부분으로 나눔
+        var pie = d3.pie().value(function(d) { return d.value; });
+        var data_ready = pie(d3.entries(data));
+
+        // 부채꼴 그리기
+        var arc = d3.arc()
+            .innerRadius(radius * 0.6)
+            .outerRadius(radius);
+
+        // 색상 스케일 정의
+        var color = d3.scaleOrdinal()
+            .domain(data_ready.map(function(d) { return d.data.key; }))
+            .range(d3.schemeCategory10);
+
+        // 그래프에 부채꼴 추가
+        svg.selectAll('whatever')
+            .data(data_ready)
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .attr('fill', function(d){ return(color(d.data.key)) });
+
+    </script>
+</body>
+</html>

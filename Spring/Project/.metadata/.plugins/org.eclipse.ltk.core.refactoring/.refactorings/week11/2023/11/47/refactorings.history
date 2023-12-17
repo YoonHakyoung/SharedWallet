@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 3 elements to &apos;member&apos;&#x0A;- Original project: &apos;week11&apos;&#x0A;- Destination element: &apos;member&apos;&#x0A;- Original elements:&#x0A;     login_form.jsp&#x0A;     login_ng.jsp&#x0A;     login_ok.jsp&#x0A;- Update references to refactored element" description="Move files" element1="src/main/webapp/WEB-INF/views/login_form.jsp" element2="src/main/webapp/WEB-INF/views/login_ng.jsp" element3="src/main/webapp/WEB-INF/views/login_ok.jsp" files="3" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1700526903978" target="src/main/webapp/WEB-INF/views/member" units="0" version="1.0"/>
+</session>

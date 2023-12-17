@@ -1,0 +1,95 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SharedWallet - 홈</title>
+    <!-- Bootstrap CSS link (you may need to download and host locally) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f2ea;
+            color: #495057;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .login {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .signup {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome to SharedWallet</h1>
+    <p>가족 및 친구들과 손쉽게 가계부를 관리하세요.</p>
+</header>
+
+<main>
+    <!-- GIF 삽입 -->
+    <img src="https://cdn.dribbble.com/users/2685751/screenshots/6854432/money-400x300.gif">
+    <img src="/myweb/image/money.gif">
+    <img src="/myweb/image/구름.gif">
+    <img src="/myweb/image/냥이.gif">
+    <img src="/myweb/image/오리.jpg">
+
+    <!-- 로그인 및 회원가입 버튼 -->
+    <div class="button-container">
+        <a href="/myweb/member/loginForm" class="button login">로그인</a>
+        <a href="/myweb/member/signupForm" class="button signup">회원가입</a>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2023 SharedWallet. All rights reserved.</p>
+</footer>
+
+<!-- Bootstrap JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>

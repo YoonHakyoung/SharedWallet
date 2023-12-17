@@ -1,0 +1,31 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SharedWallet - 홈</title>
+    <!-- 외부 스타일시트 링크 추가 -->
+    <link href="<c:url value='/resources/css/home.css' />" rel="stylesheet">
+</head>
+<body>
+
+<header>
+    <h1>Welcome to SharedWallet</h1>
+    <p>가족 및 친구들과 손쉽게 가계부를 관리하세요.</p>
+</header>
+
+<main>
+    <!-- 로그인 및 회원가입 버튼 -->
+    <div>
+        <a href="/myweb/member/loginForm" class="button login">로그인</a>
+        <a href="/myweb/member/signupForm" class="button signup">회원가입</a>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2023 SharedWallet. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login Success</title>
+    <!-- Bootstrap CSS link (you may need to download and host locally) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f0f2ea;
+            color: #495057;
+            font-family: 'SUITE-Regular';
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 100px;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+
+<%@ include file="/WEB-INF/views/include/header.jsp"%>
+
+<main>
+    <h2>Login Success</h2>
+    <p>Login was successful.</p>
+</main>
+
+<!-- Bootstrap JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<%@ include file="/WEB-INF/views/include/footer.jsp"%>
+</body>
+</html>

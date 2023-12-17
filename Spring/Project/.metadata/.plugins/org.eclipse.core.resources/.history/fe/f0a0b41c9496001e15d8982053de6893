@@ -1,0 +1,39 @@
+var labels = jsArray.map(function(item) {
+        return item.key;
+    });
+    var dataValues = jsArray.map(function(item) {
+        return item.value;
+    });
+    var ctx = document.getElementById('myDynamicPieChart').getContext('2d');
+    var myDynamicPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataValues,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 0, 0, 0.5)',
+                    'rgba(0, 255, 0, 0.5)',
+                    'rgba(0, 0, 255, 0.5)',
+                    'rgba(128, 128, 128, 0.5)',
+                ],
+            }],
+        },
+        options: {
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        return label + ': ' + value;
+                    }
+                }
+            }
+        }
+    });

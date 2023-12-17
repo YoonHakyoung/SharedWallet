@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- CSS Style -->
+    <style>
+        .navbar-nav .nav-item:hover {
+            background-color: #2c3e50; /* 변경할 색상으로 수정하세요 */
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #3498db; color: #ffffff; padding:10px;">
+    <a class="navbar-brand" style="color: #ffffff; font-size: 24px;" href="<c:url value='/asset/dashboard'/>">SharedWallet</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" style="color: #ffffff;" href="<c:url value='/asset/dashboard'/>">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: #ffffff;" href="<c:url value='/member/profile'/>">My Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: #ffffff;" href="<c:url value='/'/>">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: #ffffff;" href="<c:url value='/asset/addAssetForm'/>">Add</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: #ffffff;" href="<c:url value='/asset/listAssets'/>">List</a>
+            </li>
+            
+        </ul>
+    </div>
+</nav>
+
+<script>
+    $(document).ready(function () {
+        $('.navbar-nav .nav-item').hover(
+            function () {
+                $(this).css('background-color', '#2c3e50'); /* 변경할 색상으로 수정하세요 */
+            },
+            function () {
+                $(this).css('background-color', ''); // 마우스가 벗어났을 때 원래 색상으로 복원
+            }
+        );
+    });
+</script>
+
+</body>
+</html>

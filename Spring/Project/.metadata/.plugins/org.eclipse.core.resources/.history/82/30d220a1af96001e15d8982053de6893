@@ -1,0 +1,9 @@
+<nav>
+    <ul>
+        <li><a href="<c:url value='/asset/dashboard'/>">Dashboard</a></li>
+        <li><a href="<c:url value='/'/>">Logout</a></li>
+        <li><a href="<c:url value='/member/profile'/>">My Profile</a></li>
+        <li><a href="<c:url value='/asset/listAssets'/>">List</a></li>
+        <li><a href="<c:url value='/asset/addAssetForm'/>">Add</a></li>
+    </ul>
+</nav>

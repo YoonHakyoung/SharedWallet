@@ -1,0 +1,231 @@
+package com.company.myweb.asset;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+public class AssetService {
+
+    @Autowired
+    private AssetDao assetDao;
+
+    public int addAsset(AssetVo assetVo, String groupId) {
+        return assetDao.insertAsset(assetVo, groupId);
+    }
+
+    public List<AssetVo> listAssets() {
+        return assetDao.selectAssets();
+    }
+
+    public List<AssetVo> getAssetsByGroupId(String groupId) {
+        return assetDao.selectAssetsByGroupId(groupId);
+    }
+    
+    // 월간 지출 금액 계산 -> 대시보드 항목 
+	public int calculateMonthlyExpenditure(List<AssetVo> assetList) {
+		int monthlyExpenditure = 0;
+        for (AssetVo asset : assetList) {
+            if (isCurrentMonth(asset.getA_date())) {
+                monthlyExpenditure += asset.getA_amount();
+            }
+        }
+        return monthlyExpenditure;
+	}
+	
+	// 가장 많이 쓴 카테고리 찾기 -> 대시보드 항목 
+	public String findMostExpensiveCategory(List<AssetVo> assetList) {
+        Map<String, Integer> categoryExpenses = new HashMap<>();
+        for (AssetVo asset : assetList) {
+            if (isCurrentMonth(asset.getA_date())) {
+                String category = asset.getA_category();
+                int amount = asset.getA_amount();
+
+                categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0) + amount);
+            }
+        }
+        String mostExpensiveCategory = categoryExpenses.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("N/A");
+        return mostExpensiveCategory;
+	}
+	
+	// 많이 쓴 카테고리 순으로 정렬된 데이터를 얻기 위한 메서드 -> 대시보드 그래프 용 
+    public List<Map.Entry<String, Integer>> getSortedCategoryExpenses(List<AssetVo> assetList) {
+        Map<String, Integer> categoryExpenses = calculateCategoryExpenses(assetList);
+        List<Map.Entry<String, Integer>> sortedCategories = categoryExpenses.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()))
+                .collect(Collectors.toList());
+        System.out.println("---많이 쓴 카테고리 순 getSortedCategoryExpenses, sortedCategories");
+        System.out.println(sortedCategories);
+        return sortedCategories;
+    }
+
+    // 이번 달 데이터만 고려하여 카테고리별 지출을 계산하는 메서드 -> getSortedCategoryExpenses
+    public Map<String, Integer> calculateCategoryExpenses(List<AssetVo> assetList) {
+        Map<String, Integer> categoryExpenses = new HashMap<>();
+        for (AssetVo asset : assetList) {
+            // 이번 달의 데이터만 고려
+            if (isCurrentMonth(asset.getA_date())) {
+                String category = asset.getA_category();
+                int amount = asset.getA_amount();
+                categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0) + amount);
+            }
+        }
+        System.out.println("---이번 달 데이터만 고려하여 카테고리별 지출을 계산 calculateCategoryExpenses, categoryExpenses");
+        System.out.println(categoryExpenses);
+        return categoryExpenses;
+    }
+
+	
+	// 월간 증가액 계산 -> 대시보드 항목 
+    public String calculateMonthlyIncrease(List<AssetVo> assetList) {
+        int lastMonthExpenditure = 0;
+        int currentMonthExpenditure = 0;
+        for (AssetVo asset : assetList) {
+            // 이전 달의 데이터와 이번 달의 데이터를 구분하여 계산
+            if (isLastMonth(asset.getA_date())) {
+                lastMonthExpenditure += asset.getA_amount();
+            } else if (isCurrentMonth(asset.getA_date())) {
+                currentMonthExpenditure += asset.getA_amount();
+            }
+        }
+        int monthlyIncrease = currentMonthExpenditure - lastMonthExpenditure;
+        return "지출이 저번 달에 비해 " + (monthlyIncrease >= 0 ? monthlyIncrease + "원 늘었어요." : Math.abs(monthlyIncrease) + "원 줄었어요.");
+    }
+
+    // 날짜를 기준으로 내림차순으로 정렬하여 AssetVo 형태로 반환 -> 자산 리스트 확인 용 
+    public List<AssetVo> getSortExpenses(List<AssetVo> assetList) {
+        List<AssetVo> sortedAssets = new ArrayList<>(assetList);
+        
+        sortedAssets.sort(Comparator.comparing(AssetVo::getA_date).reversed());
+        System.out.println(sortedAssets);
+        return sortedAssets;
+    }
+    
+    // 날짜를 기준으로 내림차순으로 정렬 : 최근 목록 3가지 -> 대시보드 최근 내역 용 
+    public List<String> getRecentExpenses(List<AssetVo> assetList) {
+        List<AssetVo> sortedAssets = new ArrayList<>(assetList);
+        
+        sortedAssets.sort(Comparator.comparing(AssetVo::getA_date).reversed());
+
+        List<String> recentExpenses = new ArrayList<>();
+        int count = 0;
+
+        for (AssetVo asset : sortedAssets) {
+            if (count < 3 && isCurrentMonth(asset.getA_date())) {
+                recentExpenses.add(asset.getA_location() + " " + asset.getA_amount() + "원");
+                count++;
+            }
+        }
+        return recentExpenses;
+    }
+	
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	// 해당 날짜가 현재 달인지 확인하는 메서드
+    private boolean isCurrentMonth(String date) {
+    	LocalDate inputDate = LocalDate.parse(date, DATE_FORMATTER);
+        YearMonth currentYearMonth = YearMonth.now();
+        YearMonth inputYearMonth = YearMonth.from(inputDate);
+
+        return currentYearMonth.equals(inputYearMonth);
+    }
+
+    // 해당 날짜가 지난 달인지 확인하는 메서드
+    private boolean isLastMonth(String date) {
+    	LocalDate inputDate = LocalDate.parse(date, DATE_FORMATTER);
+        YearMonth currentYearMonth = YearMonth.now();
+        YearMonth lastMonth = currentYearMonth.minusMonths(1);
+
+        return lastMonth.equals(YearMonth.from(inputDate));
+    }
+    
+    // 날짜별 지출 총 금액을 저장하는 데이터 반환
+    public static Map<String, Integer> getDateExpenseSummary(List<AssetVo> assetList) {
+        Map<String, Integer> expenseSummary = new LinkedHashMap<>();
+
+        for (AssetVo asset : assetList) {
+            String date = asset.getA_date();
+            int amount = asset.getA_amount();
+
+            expenseSummary.put(date, expenseSummary.getOrDefault(date, 0) + amount);
+        }
+
+        return expenseSummary;
+    }
+    
+    public static String generateCalendar(List<AssetVo> assetList) {
+    	
+    	Map<String, Integer> expenseSummary = getDateExpenseSummary(assetList);
+
+        // 현재 날짜 가져오기
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(calendar.getTime());
+
+        // 현재 달의 첫 날짜로 설정
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        int firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        // 달력 생성
+        StringBuilder calendarTable = new StringBuilder();
+        calendarTable.append("<table class='calendar-table' border='1'>");
+        calendarTable.append("<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>");
+
+        // 빈 칸 채우기
+        for (int i = 1; i < firstDayOfWeek; i++) {
+            calendarTable.append("<td></td>");
+        }
+
+        while (calendar.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)) {
+            if (firstDayOfWeek > 7) {
+                firstDayOfWeek = 1;
+                calendarTable.append("</tr><tr>");
+            }
+
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+            String formattedDate = sdf.format(calendar.getTime());
+            Integer eventValue = expenseSummary.get(formattedDate);
+
+            calendarTable.append("<td style='border:1px solid black;'>");
+
+            // 날짜 표시
+            calendarTable.append(dayOfMonth);
+
+            // 데이터가 있으면 데이터 표시
+            if (eventValue != null) {
+                calendarTable.append("<br>");
+                calendarTable.append("Expense: " + eventValue);
+            }
+
+            calendarTable.append("</td>");
+
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            firstDayOfWeek++;
+        }
+
+        calendarTable.append("</tr></table>");
+        return "<div class='calendar-container'>" + calendarTable.toString()
+                // 공백 및 줄 바꿈을 추가하여 HTML이 올바르게 렌더링되도록 함
+                .replaceAll("<td>", "<td>&nbsp;")
+                .replaceAll("</tr><tr>", "</tr>\n<tr>") + "</div>";
+    }
+
+}
+

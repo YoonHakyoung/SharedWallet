@@ -1,0 +1,75 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Signup Success</title>
+    <!-- Bootstrap CSS link (you may need to download and host locally) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-family: 'SUITE-Regular';
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 100px;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #495057;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<%@ include file="/WEB-INF/views/include/header.jsp"%>
+
+<main>
+    <h2>Signup Success</h2>
+    <p>회원가입 완료 </p>
+    <a href="${pageContext.request.contextPath}/member/loginForm" class="button login">Login</a>
+</main>
+
+<!-- Bootstrap JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<%@ include file="/WEB-INF/views/include/footer.jsp"%>
+</body>
+</html>

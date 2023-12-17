@@ -1,0 +1,12 @@
+package com.company.myweb.asset;
+
+public class AssetVo {
+    private int a_no;
+    private String a_time;
+    private String a_location;
+    private String a_category;
+    private int a_amount;
+    private String a_memo;
+
+    // Getters and setters...
+}

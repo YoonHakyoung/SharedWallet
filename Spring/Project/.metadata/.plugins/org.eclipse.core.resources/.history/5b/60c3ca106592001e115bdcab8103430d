@@ -1,0 +1,68 @@
+package com.company.myweb.asset;
+
+import java.time.LocalDate;
+
+public class AssetVo {
+    private int a_no;
+    private String a_location;
+    private String a_category;
+    private int a_amount;
+    private String a_memo;
+    private String a_time;
+    private int group_id;  // 그룹 ID 추가
+    private LocalDate a_date; // 날짜 필드 추가
+
+
+	public int getA_no() {
+		return a_no;
+	}
+	public void setA_no(int a_no) {
+		this.a_no = a_no;
+	}
+	
+	public String getA_location() {
+		return a_location;
+	}
+	public void setA_location(String a_location) {
+		this.a_location = a_location;
+	}
+	public String getA_category() {
+		return a_category;
+	}
+	public void setA_category(String a_category) {
+		this.a_category = a_category;
+	}
+	public int getA_amount() {
+		return a_amount;
+	}
+	public void setA_amount(int a_amount) {
+		this.a_amount = a_amount;
+	}
+	public String getA_memo() {
+		return a_memo;
+	}
+	public void setA_memo(String a_memo) {
+		this.a_memo = a_memo;
+	}
+	public String getA_time() {
+		return a_time;
+	}
+	public void setA_time(String a_time) {
+		this.a_time = a_time;
+	}
+	public int getGroup_id() {
+		return group_id;
+	}
+	public void setGroup_id(int group_id) {
+		this.group_id = group_id;
+	}
+	public LocalDate getA_date() {
+		return a_date;
+	}
+	public void setA_date(LocalDate a_date) {
+		this.a_date = a_date;
+	}
+
+
+    
+}

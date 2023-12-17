@@ -1,0 +1,25 @@
+package com.company.myweb.asset;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AssetService {
+
+    @Autowired
+    private AssetDao assetDao;
+
+    public int addAsset(AssetVo assetVo) {
+        return assetDao.insertAsset(assetVo);
+    }
+
+    public List<AssetVo> listAssets() {
+        return assetDao.selectAssets();
+    }
+
+	public List<AssetVo> getAssetsByGroupId(int groupId) {
+		return assetDao.selectAssetsByGroupId(groupId);
+	}
+}

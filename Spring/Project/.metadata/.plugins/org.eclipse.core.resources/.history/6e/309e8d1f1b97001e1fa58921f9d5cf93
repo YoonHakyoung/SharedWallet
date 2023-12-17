@@ -1,0 +1,131 @@
+package com.company.myweb.asset;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.company.myweb.member.MemberVo;
+
+@Controller
+@RequestMapping("/asset")
+public class AssetController {
+
+    @Autowired
+    private AssetService assetService;
+
+    @GetMapping("/addAssetForm")
+    public String addAssetForm() {
+        return "asset/add_asset_form";
+    }
+
+    @PostMapping("/addAssetConfirm")
+    public String addAssetConfirm(@ModelAttribute("assetVo") AssetVo assetVo, HttpSession session) {
+        MemberVo loggedMember = (MemberVo) session.getAttribute("loggedMember");
+        if (loggedMember != null) {
+            String groupId = loggedMember.getGroup_id();
+            String userSelectedDate = assetVo.getA_date();
+            assetVo.setA_date(userSelectedDate);
+            int result = assetService.addAsset(assetVo, groupId);
+
+            if (result > 0) {
+                return "asset/add_asset_ok";
+            } else {
+                return "asset/add_asset_ng";
+            }
+        } else {
+            return "redirect:/myweb/member/loginForm";
+        }
+    }
+    
+    @GetMapping("/listAssets")
+    public String listAssets(HttpSession session, Model model) {
+        MemberVo loggedMember = (MemberVo) session.getAttribute("loggedMember");
+        if (loggedMember != null) {
+            String groupId = loggedMember.getGroup_id();
+            List<AssetVo> assetList = assetService.getAssetsByGroupId(groupId);
+            List<AssetVo> sortedAssets = assetService.getSortExpenses(assetList);
+            model.addAttribute("sortedAssets", sortedAssets);
+            return "asset/list_assets";
+        } else {
+            return "redirect:/myweb/member/loginForm";
+        }
+    }
+    
+    
+    @GetMapping("/dashboard")
+    public String showDashboard(HttpSession session, Model model) {
+        MemberVo loggedMember = (MemberVo) session.getAttribute("loggedMember");
+
+        if (loggedMember != null) {
+            String groupId = loggedMember.getGroup_id();
+            List<AssetVo> assetList = assetService.getAssetsByGroupId(groupId);
+
+            int monthlyExpenditure = assetService.calculateMonthlyExpenditure(assetList);
+            String mostExpensiveCategory = assetService.findMostExpensiveCategory(assetList);
+            String monthlyIncrease = assetService.calculateMonthlyIncrease(assetList);
+            List<String> recentExpenses = assetService.getRecentExpenses(assetList);
+            Map<String, Integer> categoryExpenses = assetService.calculateCategoryExpenses(assetList);
+
+            // 많이 쓴 카테고리 순으로 정렬된 데이터를 모델에 추가
+            List<Map.Entry<String, Integer>> sortedCategories = assetService.getSortedCategoryExpenses(assetList);
+            StringBuffer jsArray = new StringBuffer("[");
+            for (Map.Entry<String, Integer> entry : sortedCategories) {
+                jsArray.append("{'key': '" + entry.getKey() + "', 'value': " + entry.getValue() + "},");
+            }
+            jsArray.deleteCharAt(jsArray.length() - 1); // 마지막 쉼표 제거
+            jsArray.append("]");
+
+            model.addAttribute("jsArray", jsArray.toString());
+
+
+            model.addAttribute("loggedMember", loggedMember);
+            model.addAttribute("monthlyExpenditure", monthlyExpenditure);
+            model.addAttribute("mostExpensiveCategory", mostExpensiveCategory);
+            model.addAttribute("monthlyIncrease", monthlyIncrease);
+            model.addAttribute("recentExpenses", recentExpenses);
+            model.addAttribute("categoryExpenses", categoryExpenses);
+            
+            
+            return "dashboard";
+        } else {
+            return "redirect:/myweb/member/loginForm";
+        }
+    }
+    /*
+    @GetMapping("/calendar")
+    public String showCalendar(Model model, HttpSession session) {
+        MemberVo loggedMember = (MemberVo) session.getAttribute("loggedMember");
+        if (loggedMember != null) {
+            String groupId = loggedMember.getGroup_id();
+
+            // 서비스에서 데이터 가져오기
+            List<AssetVo> assetList = assetService.getAssetsByGroupId(groupId);
+
+            // 데이터를 모델에 추가
+            model.addAttribute("assetList", assetList);
+            //System.out.println("calender");
+            //System.out.println(assetList);
+            
+            return "asset/list_assets"; // 캘린더를 표시할 JSP 페이지의 경로
+        } else {
+            return "redirect:/myweb/member/loginForm";
+        }
+    }*/
+    
+    @GetMapping("/calender")
+    public String showCalendar() {
+        return "asset/calender";
+    }
+
+}

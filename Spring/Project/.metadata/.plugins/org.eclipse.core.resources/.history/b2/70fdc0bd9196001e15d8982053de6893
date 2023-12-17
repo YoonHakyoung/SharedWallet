@@ -1,0 +1,56 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashMap" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>동적 원 그래프</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div>
+    <h2>동적 원 그래프</h2>
+    <canvas id="myDynamicPieChart" width="400" height="400"></canvas>
+</div>
+
+<script>
+    var jsArray = ${jsArray}; // JSP 데이터를 JavaScript로 전달
+
+    var labels = jsArray.map(function(item) {
+        return item.key;
+    });
+
+    var dataValues = jsArray.map(function(item) {
+        return item.value;
+    });
+
+    var ctx = document.getElementById('myDynamicPieChart').getContext('2d');
+    var myDynamicPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataValues,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 0, 0, 0.5)',
+                    'rgba(0, 255, 0, 0.5)',
+                    'rgba(0, 0, 255, 0.5)',
+                    'rgba(128, 128, 128, 0.5)',
+                ],
+            }],
+        },
+    });
+</script>
+
+</body>
+</html>

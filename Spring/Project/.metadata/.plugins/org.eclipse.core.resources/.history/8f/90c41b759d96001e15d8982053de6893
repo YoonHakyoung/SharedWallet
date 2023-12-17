@@ -1,0 +1,54 @@
+package com.company.myweb.member;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/member")
+public class MemberController {
+
+    @Autowired
+    private MemberService memberService;
+
+    @GetMapping("/signupForm")
+    public String signupForm() {
+        return "member/signup_form";
+    }
+
+    @PostMapping("/signupConfirm")
+    public String signupConfirm(MemberVo memberVo) {
+        int result = memberService.createMemberAccount(memberVo);
+
+        if (result > 0) {
+            // Signup success
+            return "member/signup_ok";
+        } else {
+            // Signup failed
+            return "member/signup_ng";
+        }
+    }
+
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "member/login_form";
+    }
+    
+    @PostMapping("/loginConfirm")
+    public String loginConfirm(MemberVo memberVo, HttpSession session) {
+        MemberVo loggedMember = memberService.loginMember(memberVo);
+
+        if (loggedMember != null) {
+            // Login success
+            session.setAttribute("loggedMember", loggedMember);
+            return "member/login_ok";
+        } else {
+            // Login failed
+            return "member/login_ng";
+        }
+    }
+}

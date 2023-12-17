@@ -1,0 +1,7 @@
+#Tomcat publish data
+#Sun Dec 10 20:51:29 KST 2023
+org.eclipse.jst.jee.server\:week9=/Library/apache-tomcat-9.0.82/wtpwebapps/week9
+org.eclipse.jst.jee.server\:/binary\:/Users/yoon/.m2/repository/org/springframework/spring-web/5.2.9.RELEASE/spring-web-5.2.9.RELEASE.jar=/Library/apache-tomcat-9.0.82/wtpwebapps/Final Exam/WEB-INF/lib/spring-web-5.2.9.RELEASE.jar
+org.eclipse.jst.jee.server\:week11=/Library/apache-tomcat-9.0.82/wtpwebapps/week11
+org.eclipse.jst.jee.server\:week10=/Library/apache-tomcat-9.0.82/wtpwebapps/week10
+org.eclipse.jst.jee.server\:Final\ Exam=/Library/apache-tomcat-9.0.82/wtpwebapps/Final Exam

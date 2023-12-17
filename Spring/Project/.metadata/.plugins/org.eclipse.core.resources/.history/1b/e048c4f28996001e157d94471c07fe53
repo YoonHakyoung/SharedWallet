@@ -1,0 +1,156 @@
+package com.company.myweb.asset;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+public class AssetService {
+
+    @Autowired
+    private AssetDao assetDao;
+
+    public int addAsset(AssetVo assetVo, String groupId) {
+        return assetDao.insertAsset(assetVo, groupId);
+    }
+
+    public List<AssetVo> listAssets() {
+        return assetDao.selectAssets();
+    }
+
+    public List<AssetVo> getAssetsByGroupId(String groupId) {
+        return assetDao.selectAssetsByGroupId(groupId);
+    }
+    
+    // 월간 지출 금액 계산
+	public int calculateMonthlyExpenditure(List<AssetVo> assetList) {
+		int monthlyExpenditure = 0;
+        for (AssetVo asset : assetList) {
+            if (isCurrentMonth(asset.getA_date())) {
+                monthlyExpenditure += asset.getA_amount();
+            }
+        }
+        return monthlyExpenditure;
+	}
+	
+	// 가장 많이 쓴 카테고리 찾기
+	public String findMostExpensiveCategory(List<AssetVo> assetList) {
+        Map<String, Integer> categoryExpenses = new HashMap<>();
+        for (AssetVo asset : assetList) {
+            if (isCurrentMonth(asset.getA_date())) {
+                String category = asset.getA_category();
+                int amount = asset.getA_amount();
+
+                categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0) + amount);
+            }
+        }
+        String mostExpensiveCategory = categoryExpenses.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("N/A");
+        return mostExpensiveCategory;
+	}
+	
+	// 많이 쓴 카테고리 순으로 정렬된 데이터를 얻기 위한 메서드
+    public List<Map.Entry<String, Integer>> getSortedCategoryExpenses(List<AssetVo> assetList) {
+        Map<String, Integer> categoryExpenses = calculateCategoryExpenses(assetList);
+        List<Map.Entry<String, Integer>> sortedCategories = categoryExpenses.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()))
+                .collect(Collectors.toList());
+        System.out.println("많이 쓴 카테고리 순 getSortedCategoryExpenses, sortedCategories");
+        System.out.println(sortedCategories);
+        return sortedCategories;
+    }
+
+    // 이번 달 데이터만 고려하여 카테고리별 지출을 계산하는 메서드
+    public Map<String, Integer> calculateCategoryExpenses(List<AssetVo> assetList) {
+        Map<String, Integer> categoryExpenses = new HashMap<>();
+        for (AssetVo asset : assetList) {
+            // 이번 달의 데이터만 고려
+            if (isCurrentMonth(asset.getA_date())) {
+                String category = asset.getA_category();
+                int amount = asset.getA_amount();
+                categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0) + amount);
+            }
+        }
+        System.out.println("이번 달 데이터만 고려하여 카테고리별 지출을 계산 calculateCategoryExpenses, categoryExpenses");
+        System.out.println(categoryExpenses);
+        return categoryExpenses;
+    }
+
+	
+	// 월간 증가액 계산
+    public String calculateMonthlyIncrease(List<AssetVo> assetList) {
+        int lastMonthExpenditure = 0;
+        int currentMonthExpenditure = 0;
+        for (AssetVo asset : assetList) {
+            // 이전 달의 데이터와 이번 달의 데이터를 구분하여 계산
+            if (isLastMonth(asset.getA_date())) {
+                lastMonthExpenditure += asset.getA_amount();
+            } else if (isCurrentMonth(asset.getA_date())) {
+                currentMonthExpenditure += asset.getA_amount();
+            }
+        }
+        int monthlyIncrease = currentMonthExpenditure - lastMonthExpenditure;
+        return "지출이 저번 달에 비해 " + (monthlyIncrease >= 0 ? monthlyIncrease + "원 늘었어요." : Math.abs(monthlyIncrease) + "원 줄었어요.");
+    }
+
+    // 날짜를 기준으로 내림차순으로 정렬하여 AssetVo 형태로 반환
+    public List<AssetVo> getSortExpenses(List<AssetVo> assetList) {
+        List<AssetVo> sortedAssets = new ArrayList<>(assetList);
+        
+        sortedAssets.sort(Comparator.comparing(AssetVo::getA_date).reversed());
+        System.out.println(sortedAssets);
+        return sortedAssets;
+    }
+    
+    // 날짜를 기준으로 내림차순으로 정렬 : 최근 목록 3가지 
+    public List<String> getRecentExpenses(List<AssetVo> assetList) {
+        List<AssetVo> sortedAssets = new ArrayList<>(assetList);
+        
+        sortedAssets.sort(Comparator.comparing(AssetVo::getA_date).reversed());
+
+        List<String> recentExpenses = new ArrayList<>();
+        int count = 0;
+
+        for (AssetVo asset : sortedAssets) {
+            if (count < 3 && isCurrentMonth(asset.getA_date())) {
+                recentExpenses.add(asset.getA_location() + " " + asset.getA_amount() + "원");
+                count++;
+            }
+        }
+        return recentExpenses;
+    }
+	
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	// 해당 날짜가 현재 달인지 확인하는 메서드
+    private boolean isCurrentMonth(String date) {
+    	LocalDate inputDate = LocalDate.parse(date, DATE_FORMATTER);
+        YearMonth currentYearMonth = YearMonth.now();
+        YearMonth inputYearMonth = YearMonth.from(inputDate);
+
+        return currentYearMonth.equals(inputYearMonth);
+    }
+
+    // 해당 날짜가 지난 달인지 확인하는 메서드
+    private boolean isLastMonth(String date) {
+    	LocalDate inputDate = LocalDate.parse(date, DATE_FORMATTER);
+        YearMonth currentYearMonth = YearMonth.now();
+        YearMonth lastMonth = currentYearMonth.minusMonths(1);
+
+        return lastMonth.equals(YearMonth.from(inputDate));
+    }
+}
+

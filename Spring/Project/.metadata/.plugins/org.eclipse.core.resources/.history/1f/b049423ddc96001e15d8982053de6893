@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Asset Success</title>
+    <!-- Bootstrap CSS link (you may need to download and host locally) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: #28a745;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .btn-container .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-container .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-container .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-container .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<%@ include file="/WEB-INF/views/include/nav.jsp"%>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2 class="text-success mb-4">지출 내역이 성공적으로 등록되었습니다!</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center btn-container">
+        <div class="col-md-6 text-center">
+            <p class="lead">
+                <a href="<%= request.getContextPath() %>/asset/addAssetForm" class="btn btn-primary btn-lg">다시 등록하기</a>
+            </p>
+        </div>
+        <div class="col-md-6 text-center">
+            <p class="lead">
+                <a href="<%= request.getContextPath() %>/asset/listAssets" class="btn btn-secondary btn-lg">지출 내역 보기</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<%@ include file="/WEB-INF/views/include/footer.jsp"%>
+</body>
+</html>

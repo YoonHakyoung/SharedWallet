@@ -1,0 +1,71 @@
+/* style.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    background-color: #bdc3c7;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+a.button {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+a.login,
+a.signup {
+    display: block; /* 가운데 정렬을 위해 블록 요소로 설정 */
+    margin: 10px auto; /* 가운데 정렬을 위해 자동 마진 설정 */
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+a.login {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+a.signup {
+    background-color: #e74c3c;
+    color: #fff;
+}
+/* 버튼 사이의 간격을 조절하는 추가 스타일 */
+a.login + a.signup {
+    margin-top: 0.5px; /* 첫 번째 버튼과 두 번째 버튼 사이의 간격 조절 */
+}

@@ -1,0 +1,30 @@
+package com.company.myweb.asset;
+
+public class AssetVo {
+    private int a_no;
+    private String a_time;
+    private String a_location;
+    private String a_category;
+    private int a_amount;
+    private String a_memo;
+	public int getA_no() {
+		return a_no;
+	}
+	public void setA_no(int a_no) {
+		this.a_no = a_no;
+	}
+	public String getA_time() {
+		return a_time;
+	}
+	public void setA_time(String a_time) {
+		this.a_time = a_time;
+	}
+	public String getA_location() {
+		return a_location;
+	}
+	public void setA_location(String a_location) {
+		this.a_location = a_location;
+	}
+
+    // Getters and setters...
+}

@@ -1,0 +1,31 @@
+package com.company.myweb.asset;
+
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class AssetRowMapper implements RowMapper<AssetVo> {
+
+    @Override
+    public AssetVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+        AssetVo assetVo = new AssetVo();
+        assetVo.setA_no(rs.getInt("a_no"));
+        assetVo.setA_time(rs.getString("a_time"));
+        assetVo.setA_location(rs.getString("a_location"));
+        assetVo.setA_category(rs.getString("a_category"));
+        assetVo.setA_amount(rs.getInt("a_amount"));
+        assetVo.setA_memo(rs.getString("a_memo"));
+
+     // 변경: Date -> LocalDate로 변환
+        Date sqlDate = rs.getDate("a_date");
+        if (sqlDate != null) {
+            assetVo.setA_date(sqlDate.toLocalDate());
+        } else {
+            assetVo.setA_date(null);
+        }
+
+        return assetVo;
+    }
+}

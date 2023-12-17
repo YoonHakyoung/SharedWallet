@@ -1,0 +1,46 @@
+package com.company.myweb.asset;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.stereotype.Repository;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+public class AssetDao {
+
+	@Autowired
+    private JdbcTemplate jdbcTemplate;
+
+	public int insertAsset(AssetVo assetVo, int groupId) {
+	    String sql = "INSERT INTO assets (a_location, a_category, a_amount, a_memo, a_time, group_id, a_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	    return jdbcTemplate.update(sql, new PreparedStatementSetter() {
+	        @Override
+	        public void setValues(PreparedStatement ps) throws SQLException {
+	            ps.setString(1, assetVo.getA_location());
+	            ps.setString(2, assetVo.getA_category());
+	            ps.setInt(3, assetVo.getA_amount());
+	            ps.setString(4, assetVo.getA_memo());
+	            ps.setString(5, assetVo.getA_time());
+	            ps.setInt(6, groupId);
+	            ps.setString(7, assetVo.getA_date());
+	        }
+	    });
+	}
+
+
+    public List<AssetVo> selectAssets() {
+        String sql = "SELECT * FROM assets";
+        return jdbcTemplate.query(sql, new AssetRowMapper());
+    }
+
+    public List<AssetVo> selectAssetsByGroupId(int groupId) {
+        String sql = "SELECT * FROM assets WHERE group_id = ?";
+        return jdbcTemplate.query(sql, new AssetRowMapper(), groupId);
+    }
+}

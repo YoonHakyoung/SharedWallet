@@ -1,0 +1,25 @@
+package com.company.myweb.asset;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class AssetDao {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public int insertAsset(AssetVo assetVo) {
+    	String sql = "INSERT INTO assets (a_time, a_location, a_category, a_amount, a_memo, group_id) VALUES (?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, assetVo.getA_time(), assetVo.getA_location(), assetVo.getA_category(),
+                assetVo.getA_amount(), assetVo.getA_memo(), assetVo.getGroup_id());
+    }
+
+    public List<AssetVo> selectAssets() {
+        String sql = "SELECT * FROM assets";
+        return jdbcTemplate.query(sql, new AssetRowMapper());
+    }
+}

@@ -1,0 +1,71 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Calendar with Amount</title>
+    
+    <!-- FullCalendar CSS (you may need to download and host locally) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <!-- Bootstrap CSS link (you may need to download and host locally) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            margin: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="calendar"></div>
+</div>
+
+<!-- FullCalendar JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+<!-- Bootstrap JS dependencies (you may need to download and host locally) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: [
+                // 데이터베이스에서 받아온 날짜와 금액 정보 객체 리스트
+                <c:forEach var="data" items="${yourDataList}">
+                    {
+                        title: '${data.amount}', // 금액을 title로 표시
+                        start: '${data.date}',   // 날짜 정보
+                        url: '${data.url}'       // 선택 시 이동할 링크
+                    },
+                </c:forEach>
+            ],
+            eventRender: function(event, element) {
+                element.qtip({
+                    content: event.title, // qTip을 사용하여 금액을 툴팁으로 표시
+                    position: {
+                        my: 'bottom center',
+                        at: 'top center'
+                    },
+                    style: {
+                        classes: 'qtip-bootstrap'
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
