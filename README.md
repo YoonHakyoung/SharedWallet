@@ -1,6 +1,7 @@
 # SharedWallet
 공동 지출 관리 웹 서비스
 
+![실무프로젝트2-기말과제](https://github.com/YoonHakyoung/SharedWallet/assets/128118765/5fc27eaa-53d0-4007-ae75-d8b3df2c9754)
 ![슬라이드2](https://github.com/YoonHakyoung/SharedWallet/assets/128118765/4a99fedd-7ae7-4d6c-aa76-cd88fcf979c7)
 ![슬라이드5](https://github.com/YoonHakyoung/SharedWallet/assets/128118765/adc82aeb-8914-4b64-80e9-f661d61749f5)
 ![슬라이드6](https://github.com/YoonHakyoung/SharedWallet/assets/128118765/3a3aeb74-f76b-47d4-9b19-79cc4c2e0c18)
